@@ -1,11 +1,12 @@
 package org.example;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 /**
  * Можно изменять по своему усмотрению, не нарушая правила приоритезации очереди
  */
-public class Ticket {
+public class Ticket implements Comparable<Ticket> {
 
     private static int idSeq;
 
@@ -28,5 +29,17 @@ public class Ticket {
 
     public Ticket(String type) {
         this.type = type;
+    }
+
+    @Override
+    public int compareTo(Ticket o) {
+        if (!"pension".equals(this.type) && "pension".equals(o.type)) return 1;
+
+        if ("pension".equals(this.type) && !"pension".equals(o.type)) return -1;
+
+        return Long.compare(
+                this.registerTime.toLocalDateTime().toEpochSecond(ZoneOffset.UTC),
+                o.registerTime.toLocalDateTime().toEpochSecond(ZoneOffset.UTC)
+        );
     }
 }
